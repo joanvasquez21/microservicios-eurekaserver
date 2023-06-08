@@ -1,6 +1,7 @@
 package com.springboot.app.productos.controller;
  
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,15 @@ public class ProductoController {
 	}
 	
 	@GetMapping("/ver/{id}")
-	public Producto detalle(@PathVariable Long id) {
+	public Producto detalle(@PathVariable Long id) throws InterruptedException {
 		Producto producto = productoService.findById(id);
 		
+		if(id.equals(10L)) {
+			throw new IllegalStateException("Producto no encontrado");
+		}
+		if(id.equals(7L)) {
+			TimeUnit.SECONDS.sleep(5L);
+		}
 		producto.setPort(Integer.parseInt(env.getProperty("local.server.port")));
 		//	producto.setPort(port);
 		/*
@@ -51,6 +58,6 @@ public class ProductoController {
 		
 		*/
 		
-		return productoService.findById(id);
+		return producto;
 	}
 }
